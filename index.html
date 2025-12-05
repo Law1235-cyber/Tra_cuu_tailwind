@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailwind CSS Master Dictionary (Full Version)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Be Vietnam Pro"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        .rotate-90-down { transform: rotate(90deg); }
+        
+        /* Hiệu ứng mở rộng mượt mà */
+        .detail-row.hidden { display: none; }
+        .detail-row.open { display: table-row; animation: fadeIn 0.2s ease-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen flex flex-col overflow-hidden font-sans">
+
+    <header class="bg-white border-b border-slate-200 shadow-sm z-30 flex-none px-4 py-4 md:px-8">
+        <div class="max-w-7xl mx-auto w-full">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-indigo-700 uppercase tracking-tight flex items-center gap-2">
+                        <span class="bg-indigo-600 text-white p-1 rounded">TW</span>
+                        Master Dictionary
+                    </h1>
+                    <p class="text-slate-500 text-sm mt-1">Tra cứu chi tiết thuộc tính, công dụng và ví dụ thực tế</p>
+                </div>
+                <div class="text-right hidden md:block">
+                    <span class="text-xs font-semibold bg-green-100 text-green-700 px-2 py-1 rounded-full">Database: Full Updated</span>
+                </div>
+            </div>
+            
+            <div class="relative w-full shadow-sm group">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="block w-full pl-12 pr-12 py-3 border border-slate-300 rounded-lg bg-slate-50 text-base focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all" 
+                    placeholder="Nhập code CSS, Tailwind hoặc tiếng Việt (VD: grid, shadow, căn giữa...)"
+                    autofocus
+                >
+                <button id="clearBtn" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-red-500 cursor-pointer" title="Xóa tìm kiếm">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow overflow-y-auto bg-slate-100 p-2 sm:p-4 md:p-6">
+        <div class="max-w-7xl mx-auto bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
+            <table class="min-w-full table-fixed divide-y divide-slate-100">
+                <thead class="bg-slate-50 sticky top-0 z-20 shadow-sm">
+                    <tr>
+                        <th class="w-10 py-3 text-center"></th>
+                        <th class="w-[30%] px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">CSS Standard</th>
+                        <th class="w-[25%] px-4 py-3 text-left text-xs font-bold text-indigo-600 uppercase tracking-wider">Tailwind Class</th>
+                        <th class="w-auto px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tác Dụng Chính</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody" class="bg-white text-sm divide-y divide-slate-50">
+                    </tbody>
+            </table>
+
+            <div id="noResult" class="hidden flex flex-col items-center justify-center py-20 text-slate-400">
+                <svg class="h-12 w-12 mb-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+                <p class="font-medium">Không tìm thấy kết quả phù hợp!</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        /* =========================================
+           DATABASE KHỔNG LỒ (FULL DATA)
+           ========================================= */
+        const dictionary = [
+            // ================= LAYOUT =================
+            {
+                css: "display: block;", tailwind: "block", 
+                desc: "Hiển thị dạng khối (Block)",
+                detail: "Phần tử sẽ chiếm toàn bộ chiều rộng của hàng (xuống dòng mới). Thường dùng cho div, p, section.",
+                example: `<span class="block bg-red-200">Tôi là span nhưng hiển thị như div</span>`
+            },
+            {
+                css: "display: flex;", tailwind: "flex", 
+                desc: "Kích hoạt Flexbox Layout",
+                detail: "Biến phần tử thành Flex Container. Các con bên trong sẽ nằm ngang hàng mặc định. Đây là công cụ bố cục mạnh nhất.",
+                example: `<div class="flex gap-4">\n  <div class="bg-blue-200 p-2">Item 1</div>\n  <div class="bg-blue-200 p-2">Item 2</div>\n</div>`
+            },
+            {
+                css: "display: grid;", tailwind: "grid", 
+                desc: "Kích hoạt Grid Layout",
+                detail: "Dùng để chia lưới 2 chiều (hàng và cột). Phức tạp hơn flex nhưng mạnh hơn trong việc chia cột đều.",
+                example: `<div class="grid grid-cols-3 gap-2">\n  <div class="bg-green-200">1</div>\n  <div class="bg-green-200">2</div>\n  <div class="bg-green-200">3</div>\n</div>`
+            },
+            {
+                css: "display: none;", tailwind: "hidden", 
+                desc: "Ẩn hoàn toàn phần tử",
+                detail: "Phần tử biến mất khỏi DOM render, không chiếm diện tích. Khác với opacity-0 (vẫn chiếm chỗ) và invisible (vẫn chiếm chỗ).",
+                example: `<div class="hidden">Bạn không thấy tôi đâu</div>`
+            },
+            {
+                css: "position: absolute;", tailwind: "absolute", 
+                desc: "Vị trí tuyệt đối",
+                detail: "Phần tử thoát khỏi luồng tài liệu. Nó sẽ căn vị trí dựa trên phần tử cha gần nhất có thuộc tính 'relative'.",
+                example: `<div class="relative h-20 bg-gray-200">\n  <div class="absolute top-0 right-0 bg-red-500 p-1 text-white">Góc phải</div>\n</div>`
+            },
+            {
+                css: "position: relative;", tailwind: "relative", 
+                desc: "Vị trí tương đối",
+                detail: "Giữ nguyên vị trí trong luồng, nhưng làm điểm neo (anchor) cho các phần tử con dùng absolute.",
+                example: `<div class="relative">Cha (Neo)</div>`
+            },
+            {
+                css: "position: fixed;", tailwind: "fixed", 
+                desc: "Cố định trên màn hình",
+                detail: "Phần tử sẽ đứng yên trên màn hình kể cả khi bạn cuộn trang (VD: Header, Nút Chat, Modal).",
+                example: `<div class="fixed bottom-4 right-4 bg-blue-600 text-white p-3 rounded-full shadow-lg">Chat</div>`
+            },
+             {
+                css: "z-index: 50;", tailwind: "z-50", 
+                desc: "Lớp hiển thị (độ nổi)",
+                detail: "Số càng lớn thì càng nằm đè lên trên các phần tử khác. Tailwind hỗ trợ: z-0, z-10, z-20, z-30, z-40, z-50.",
+                example: `<div class="relative">\n  <div class="z-10 absolute bg-red-500">Dưới</div>\n  <div class="z-50 absolute bg-blue-500">Trên</div>\n</div>`
+            },
+            {
+                css: "overflow: hidden;", tailwind: "overflow-hidden", 
+                desc: "Cắt phần dư thừa",
+                detail: "Nếu nội dung bên trong to hơn khung chứa, phần thừa sẽ bị cắt đi, không hiển thị.",
+                example: `<div class="w-20 h-20 overflow-hidden border">\n  <img src="..." class="w-40 max-w-none" />\n</div>`
+            },
+
+            // ================= FLEXBOX & GRID CHUYÊN SÂU =================
+            {
+                css: "flex-direction: column;", tailwind: "flex-col", 
+                desc: "Xếp item dọc (Cột)",
+                detail: "Trục chính (Main Axis) chuyển thành dọc. Dùng rất nhiều trên Mobile.",
+                example: `<div class="flex flex-col gap-2">\n  <button>Nút 1</button>\n  <button>Nút 2</button>\n</div>`
+            },
+            {
+                css: "justify-content: space-between;", tailwind: "justify-between", 
+                desc: "Căn đều 2 đầu",
+                detail: "Item đầu nằm sát trái, Item cuối nằm sát phải, các item giữa chia đều. Thường dùng cho Navbar (Logo --- Menu).",
+                example: `<div class="flex justify-between border p-2">\n  <span>Trái</span>\n  <span>Phải</span>\n</div>`
+            },
+            {
+                css: "align-items: center;", tailwind: "items-center", 
+                desc: "Căn giữa dọc (Trục phụ)",
+                detail: "Căn giữa các item theo chiều cao của container. Cực kỳ quan trọng để text nằm giữa icon.",
+                example: `<div class="flex items-center h-16 bg-gray-100">\n  <span>Luôn ở giữa chiều cao</span>\n</div>`
+            },
+             {
+                css: "flex-wrap: wrap;", tailwind: "flex-wrap", 
+                desc: "Cho phép xuống dòng",
+                detail: "Khi Flex container hết chỗ, các item sẽ tự động rớt xuống dòng dưới thay vì bị co ép lại.",
+                example: `<div class="flex flex-wrap gap-2 w-40 border">\n  <div class="w-20 bg-red-200">1</div>\n  <div class="w-20 bg-red-200">2</div>\n  <div class="w-20 bg-red-200">3</div>\n</div>`
+            },
+            {
+                css: "grid-template-columns: repeat(3, 1fr);", tailwind: "grid-cols-3", 
+                desc: "Chia Grid thành 3 cột đều nhau",
+                detail: "Tự động chia layout thành 3 cột bằng nhau bất kể kích thước màn hình.",
+                example: `<div class="grid grid-cols-3 gap-4">\n  <div class="bg-gray-200">Cột 1</div>\n  <div class="bg-gray-200">Cột 2</div>\n  <div class="bg-gray-200">Cột 3</div>\n</div>`
+            },
+            {
+                css: "grid-column: span 2;", tailwind: "col-span-2", 
+                desc: "Item chiếm 2 cột",
+                detail: "Trong lưới Grid, phần tử này sẽ to gấp đôi, chiếm vị trí của 2 cột.",
+                example: `<div class="grid grid-cols-3 gap-1">\n  <div class="col-span-2 bg-blue-200">Dài 2 cột</div>\n  <div class="bg-red-200">1 cột</div>\n</div>`
+            },
+
+            // ================= SPACING (Khoảng cách) =================
+            {
+                css: "padding: 1rem;", tailwind: "p-4", 
+                desc: "Padding 4 phía (16px)",
+                detail: "Quy tắc: 1 unit = 0.25rem = 4px. Vậy p-4 = 16px, p-8 = 32px. Tạo khoảng thở bên trong phần tử.",
+                example: `<div class="p-4 border border-blue-500">Nội dung cách viền 16px</div>`
+            },
+             {
+                css: "padding-left: 1rem; padding-right: 1rem;", tailwind: "px-4", 
+                desc: "Padding trục X (Trái/Phải)",
+                detail: "Chỉ thêm đệm hai bên, giữ nguyên trên dưới. Thường dùng cho Button.",
+                example: `<button class="px-6 py-2 bg-indigo-500 text-white rounded">Button chuẩn</button>`
+            },
+            {
+                css: "margin: auto;", tailwind: "m-auto", 
+                desc: "Margin tự động",
+                detail: "Đẩy phần tử vào giữa nếu cha là flex, hoặc căn giữa khối.",
+                example: `<div class="flex w-full h-20 bg-gray-200">\n  <div class="m-auto bg-white p-2">Ở giữa</div>\n</div>`
+            },
+            {
+                css: "gap: 1rem;", tailwind: "gap-4", 
+                desc: "Khoảng cách giữa các item",
+                detail: "Dùng trong Flexbox hoặc Grid. Tạo rãnh ngăn cách giữa các phần tử con mà không cần margin từng cái.",
+                example: `<div class="flex gap-4">\n  <div>A</div>\n  <div>B</div>\n</div>`
+            },
+
+            // ================= SIZING (Kích thước) =================
+            {
+                css: "width: 100%;", tailwind: "w-full", 
+                desc: "Rộng full container (100%)",
+                detail: "Chiếm hết chiều ngang của phần tử cha.",
+                example: `<div class="w-full bg-yellow-200">Full Width</div>`
+            },
+            {
+                css: "width: 100vw;", tailwind: "w-screen", 
+                desc: "Rộng bằng màn hình thiết bị",
+                detail: "Chiếm hết chiều ngang của viewport (cửa sổ trình duyệt), bất kể cha nó nhỏ thế nào.",
+                example: `<div class="w-screen bg-black text-white">Full Screen Bar</div>`
+            },
+             {
+                css: "height: 100vh;", tailwind: "h-screen", 
+                desc: "Cao bằng màn hình thiết bị",
+                detail: "100vh = 100% Viewport Height. Thường dùng làm Banner trang chủ hoặc Login Page full màn hình.",
+                example: `<div class="h-screen flex items-center justify-center bg-gray-100">\n  <form>Login...</form>\n</div>`
+            },
+            {
+                css: "max-width: 28rem;", tailwind: "max-w-md", 
+                desc: "Giới hạn độ rộng tối đa",
+                detail: "Phần tử sẽ không to quá kích thước này. max-w-md ~ 448px. Rất tốt để làm khung đọc bài viết cho đỡ mỏi mắt.",
+                example: `<p class="max-w-prose mx-auto">Văn bản dài dòng...</p>`
+            },
+
+            // ================= TYPOGRAPHY (Văn bản) =================
+            {
+                css: "font-size: 0.75rem;", tailwind: "text-xs", 
+                desc: "Chữ siêu nhỏ (12px)",
+                detail: "Dùng cho ghi chú, footer, label nhỏ.",
+                example: `<span class="text-xs text-gray-500">Copyright 2024</span>`
+            },
+            {
+                css: "font-size: 1.125rem;", tailwind: "text-lg", 
+                desc: "Chữ hơi lớn (18px)",
+                detail: "Lớn hơn mặc định một chút, dùng cho đoạn giới thiệu (lead text).",
+                example: `<p class="text-lg text-gray-700">Đây là đoạn mở đầu...</p>`
+            },
+             {
+                css: "font-weight: 700;", tailwind: "font-bold", 
+                desc: "Chữ in đậm",
+                detail: "Tương đương thẻ <b> hoặc <strong>.",
+                example: `<h1 class="font-bold text-2xl">Tiêu đề chính</h1>`
+            },
+            {
+                css: "text-align: center;", tailwind: "text-center", 
+                desc: "Căn giữa văn bản",
+                detail: "Căn giữa nội dung text bên trong block.",
+                example: `<p class="text-center">Chữ nằm giữa</p>`
+            },
+            {
+                css: "color: #EF4444;", tailwind: "text-red-500", 
+                desc: "Màu chữ Đỏ",
+                detail: "Tailwind có bảng màu từ 50 (nhạt) đến 950 (đậm). 500 là màu chuẩn.",
+                example: `<span class="text-red-500 font-bold">Error!</span>`
+            },
+             {
+                css: "line-height: 1;", tailwind: "leading-none", 
+                desc: "Độ cao dòng sít nhau",
+                detail: "Dùng cho tiêu đề lớn để tránh khoảng trắng thừa ở trên/dưới chữ.",
+                example: `<h1 class="text-6xl leading-none">BIG TITLE</h1>`
+            },
+            {
+                css: "text-transform: uppercase;", tailwind: "uppercase", 
+                desc: "VIẾT HOA TOÀN BỘ",
+                detail: "Biến đổi text thành chữ in hoa.",
+                example: `<span class="uppercase tracking-widest">Danh mục</span>`
+            },
+            {
+                css: "overflow: hidden; text-overflow: ellipsis; white-space: nowrap;", tailwind: "truncate", 
+                desc: "Cắt chữ thêm dấu ...",
+                detail: "Cực hay. Nếu text quá dài so với khung, nó tự thêm dấu ... ở cuối.",
+                example: `<div class="w-40 truncate">Dòng chữ này rất dài và sẽ bị cắt bớt</div>`
+            },
+
+            // ================= DECORATION & BACKGROUND =================
+            {
+                css: "background-color: #F3F4F6;", tailwind: "bg-gray-100", 
+                desc: "Nền xám nhạt",
+                detail: "Thường dùng làm nền tổng thể cho trang web để đỡ chói mắt hơn màu trắng tinh.",
+                example: `<body class="bg-gray-100">...</body>`
+            },
+             {
+                css: "background-image: linear-gradient(...);", tailwind: "bg-gradient-to-r from-cyan-500 to-blue-500", 
+                desc: "Màu nền chuyển sắc (Gradient)",
+                detail: "Tạo dải màu từ trái qua phải (to-r), từ trên xuống (to-b). Cần khai báo màu bắt đầu (from) và màu kết thúc (to).",
+                example: `<div class="h-20 bg-gradient-to-r from-purple-500 to-pink-500 text-white flex items-center justify-center">Gradient đẹp</div>`
+            },
+            {
+                css: "border-radius: 0.5rem;", tailwind: "rounded-lg", 
+                desc: "Bo góc vừa (8px)",
+                detail: "Bo các góc của phần tử. Các mức: rounded-sm, rounded, rounded-md, rounded-lg, rounded-xl, rounded-2xl.",
+                example: `<div class="p-4 bg-white rounded-lg shadow">Card Bo Góc</div>`
+            },
+             {
+                css: "border-radius: 9999px;", tailwind: "rounded-full", 
+                desc: "Bo tròn hoàn toàn",
+                detail: "Tạo hình tròn (nếu w=h) hoặc hình viên thuốc (nếu w>h).",
+                example: `<button class="px-4 py-1 bg-blue-600 text-white rounded-full">Nút viên thuốc</button>`
+            },
+            {
+                css: "border: 1px solid #E5E7EB;", tailwind: "border border-gray-200", 
+                desc: "Viền xám mỏng",
+                detail: "Thêm viền xung quanh. Cần 2 class: 'border' (độ dày) và 'border-color' (màu).",
+                example: `<input type="text" class="border border-gray-300 p-2 rounded" />`
+            },
+            {
+                css: "box-shadow: 0 10px 15px ...;", tailwind: "shadow-lg", 
+                desc: "Đổ bóng lớn (Nổi khối)",
+                detail: "Tạo chiều sâu UI. Các mức: shadow-sm, shadow, shadow-md, shadow-lg, shadow-xl, shadow-2xl.",
+                example: `<div class="bg-white p-6 rounded-xl shadow-xl">Nổi bần bật</div>`
+            },
+            {
+                css: "opacity: 0.5;", tailwind: "opacity-50", 
+                desc: "Độ trong suốt 50%",
+                detail: "Làm mờ phần tử. Thường dùng khi disable nút hoặc làm nền mờ.",
+                example: `<div class="bg-blue-500 opacity-50">Mờ 50%</div>`
+            },
+
+            // ================= EFFECTS & FILTERS (Hiệu ứng ảnh) =================
+            {
+                css: "filter: blur(8px);", tailwind: "blur-md", 
+                desc: "Làm nhòe (Blur)",
+                detail: "Làm nhòe nội dung. Thường dùng cho background phía sau modal.",
+                example: `<div class="blur-sm bg-image...">Ảnh nền mờ</div>`
+            },
+            {
+                css: "filter: grayscale(100%);", tailwind: "grayscale", 
+                desc: "Ảnh đen trắng",
+                detail: "Chuyển toàn bộ màu sắc thành thang độ xám.",
+                example: `<img src="..." class="grayscale hover:grayscale-0 transition" />`
+            },
+             {
+                css: "backdrop-filter: blur(4px);", tailwind: "backdrop-blur-sm", 
+                desc: "Hiệu ứng kính mờ (Glassmorphism)",
+                detail: "Làm mờ những thứ nằm *phía sau* phần tử này. Cần kết hợp với nền trong suốt (bg-white/30).",
+                example: `<div class="bg-white/30 backdrop-blur-md p-4 rounded border border-white/20">\n  Hiệu ứng kính iPhone\n</div>`
+            },
+
+            // ================= TRANSITION & ANIMATION (Chuyển động) =================
+            {
+                css: "transition: all 300ms;", tailwind: "transition duration-300", 
+                desc: "Hiệu ứng chuyển đổi mượt mà",
+                detail: "Bắt buộc phải có để các hiệu ứng hover không bị giật cục.",
+                example: `<button class="bg-blue-500 hover:bg-blue-700 transition duration-300 text-white p-2 rounded">Hover me</button>`
+            },
+            {
+                css: "transform: scale(1.1);", tailwind: "hover:scale-110", 
+                desc: "Phóng to khi hover",
+                detail: "Khi di chuột vào, phần tử sẽ to lên 110%. Kết hợp với transition để mượt.",
+                example: `<div class="w-10 h-10 bg-red-500 transition hover:scale-110"></div>`
+            },
+            {
+                css: "transform: rotate(45deg);", tailwind: "rotate-45", 
+                desc: "Xoay 45 độ",
+                detail: "Xoay phần tử.",
+                example: `<div class="rotate-45 bg-yellow-300 p-2 inline-block">Xoay</div>`
+            },
+            {
+                css: "animation: spin 1s linear infinite;", tailwind: "animate-spin", 
+                desc: "Xoay vòng tròn (Loading)",
+                detail: "Hiệu ứng xoay vô tận, dùng làm icon loading.",
+                example: `<svg class="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">...</svg>`
+            },
+            {
+                css: "animation: bounce 1s infinite;", tailwind: "animate-bounce", 
+                desc: "Nhảy lên xuống",
+                detail: "Hiệu ứng nảy, dùng để gây chú ý (ví dụ mũi tên chỉ xuống).",
+                example: `<div class="animate-bounce">⬇</div>`
+            },
+
+            // ================= INTERACTIVITY (Tương tác) =================
+            {
+                css: "cursor: pointer;", tailwind: "cursor-pointer", 
+                desc: "Con trỏ bàn tay",
+                detail: "Biến con chuột thành hình bàn tay, báo hiệu có thể click được.",
+                example: `<div class="cursor-pointer">Click tôi</div>`
+            },
+            {
+                css: "cursor: not-allowed;", tailwind: "cursor-not-allowed", 
+                desc: "Con trỏ cấm",
+                detail: "Báo hiệu nút đang bị vô hiệu hóa (disabled).",
+                example: `<button class="cursor-not-allowed opacity-50 bg-gray-300">Disabled</button>`
+            },
+            {
+                css: "pointer-events: none;", tailwind: "pointer-events-none", 
+                desc: "Xuyên thấu (Không nhận click)",
+                detail: "Chuột sẽ click xuyên qua phần tử này xuống phần tử bên dưới. Thường dùng cho icon trang trí đè lên nút.",
+                example: `<div class="pointer-events-none absolute inset-0">Lớp phủ không chặn click</div>`
+            },
+            {
+                css: "resize: none;", tailwind: "resize-none", 
+                desc: "Cấm kéo dãn Textarea",
+                detail: "Ngăn người dùng kéo to nhỏ khung nhập liệu.",
+                example: `<textarea class="resize-none border p-2"></textarea>`
+            },
+            {
+                css: "outline: none;", tailwind: "focus:outline-none", 
+                desc: "Bỏ viền xanh mặc định khi click",
+                detail: "Khi click vào input, trình duyệt thường hiện viền xanh/đen. Dùng cái này để bỏ đi và tự style ring của riêng mình.",
+                example: `<input class="focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Focus me" />`
+            },
+            
+            // ================= RESPONSIVE (Tương thích thiết bị) =================
+            {
+                css: "@media (min-width: 640px)", tailwind: "sm:", 
+                desc: "Màn hình Mobile lớn (>640px)",
+                detail: "Prefix áp dụng style cho màn hình từ 640px trở lên.",
+                example: `<div class="bg-red-500 sm:bg-blue-500">Đỏ trên Mobile, Xanh trên Tablet</div>`
+            },
+            {
+                css: "@media (min-width: 768px)", tailwind: "md:", 
+                desc: "Màn hình Tablet (>768px)",
+                detail: "Breakpoint quan trọng nhất. Thường dùng để chuyển từ 1 cột (mobile) sang nhiều cột.",
+                example: `<div class="grid grid-cols-1 md:grid-cols-2">...</div>`
+            },
+            {
+                css: "@media (min-width: 1024px)", tailwind: "lg:", 
+                desc: "Màn hình Laptop (>1024px)",
+                detail: "Prefix cho màn hình máy tính.",
+                example: `<div class="hidden lg:block">Chỉ hiện trên máy tính</div>`
+            }
+        ];
+
+        /* =========================================
+           LOGIC XỬ LÝ GIAO DIỆN
+           ========================================= */
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearBtn');
+        const tableBody = document.getElementById('tableBody');
+        const noResult = document.getElementById('noResult');
+
+        // Render bảng dữ liệu
+        function renderTable(data) {
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                noResult.classList.remove('hidden');
+                return;
+            } else {
+                noResult.classList.add('hidden');
+            }
+
+            data.forEach((item, index) => {
+                const uniqueId = `detail-${index}`;
+                
+                // 1. Tạo Dòng Chính (Header Row)
+                const mainRow = document.createElement('tr');
+                mainRow.className = "group hover:bg-indigo-50 transition-colors cursor-pointer border-b border-slate-50";
+                mainRow.onclick = function(e) {
+                    // Nếu click vào nút copy thì không mở detail
+                    if(e.target.closest('.copy-btn')) return;
+                    toggleDetail(uniqueId, mainRow.querySelector('.toggle-icon'));
+                };
+
+                // Highlight từ khóa tìm kiếm
+                const cssHtml = highlightText(item.css, searchInput.value);
+                const twHtml = highlightText(item.tailwind, searchInput.value);
+                const descHtml = highlightText(item.desc, searchInput.value);
+
+                mainRow.innerHTML = `
+                    <td class="py-3 text-center">
+                        <svg class="toggle-icon w-4 h-4 text-slate-400 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </td>
+                    <td class="px-4 py-3 text-pink-600 font-mono text-xs md:text-sm break-words">${cssHtml}</td>
+                    <td class="px-4 py-3 relative">
+                        <button class="copy-btn text-left font-mono font-bold text-indigo-700 bg-indigo-50/50 hover:bg-indigo-200 border border-indigo-100 px-2 py-1 rounded text-xs md:text-sm transition-all flex items-center gap-2 group-hover:shadow-sm"
+                                onclick="copyToClipboard('${item.tailwind}')" title="Copy Class">
+                            ${twHtml}
+                        </button>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600 text-sm">${descHtml}</td>
+                `;
+
+                // 2. Tạo Dòng Chi Tiết (Detail Row)
+                const detailRow = document.createElement('tr');
+                detailRow.id = uniqueId;
+                detailRow.className = "detail-row hidden bg-slate-50 border-b border-slate-100";
+                
+                // Xử lý HTML cho Example (escape ký tự đặc biệt)
+                const safeExample = escapeHtml(item.example);
+
+                detailRow.innerHTML = `
+                    <td colspan="4" class="px-4 py-4 md:px-12">
+                        <div class="flex flex-col gap-4 text-sm">
+                            <div class="flex gap-3">
+                                <div class="mt-0.5 min-w-[20px]">💡</div>
+                                <div>
+                                    <span class="font-bold text-slate-700 block mb-1">Giải thích chuyên sâu:</span>
+                                    <p class="text-slate-600 leading-relaxed">${item.detail}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-3">
+                                <div class="mt-0.5 min-w-[20px]">💻</div>
+                                <div class="w-full">
+                                    <span class="font-bold text-slate-700 block mb-1">Ví dụ thực tế:</span>
+                                    <div class="relative group/code">
+                                        <pre class="bg-slate-800 text-slate-200 p-3 rounded-lg overflow-x-auto font-mono text-xs border border-slate-700 shadow-inner">${safeExample}</pre>
+                                        <button class="absolute top-2 right-2 bg-white/10 hover:bg-white/20 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/code:opacity-100 transition-opacity"
+                                                onclick="copyToClipboard('${item.example.replace(/'/g, "\\'")}')">
+                                            Copy Code
+                                        </button>
+                                    </div>
+                                    <div class="mt-2 p-3 border border-slate-200 rounded-lg bg-white bg-[url('https://tailwindcss.com/_next/static/media/3.49479365.png')] bg-contain">
+                                        <div class="text-xs text-slate-400 mb-1 uppercase tracking-wider font-semibold">Kết quả hiển thị:</div>
+                                        ${item.example} 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                `;
+
+                tableBody.appendChild(mainRow);
+                tableBody.appendChild(detailRow);
+            });
+        }
+
+        // --- Các hàm tiện ích ---
+
+        // Toggle mở rộng
+        window.toggleDetail = function(id, icon) {
+            const row = document.getElementById(id);
+            if (row.classList.contains('hidden')) {
+                row.classList.remove('hidden');
+                row.classList.add('open');
+                icon.classList.add('rotate-90-down', 'text-indigo-600');
+            } else {
+                row.classList.add('hidden');
+                row.classList.remove('open');
+                icon.classList.remove('rotate-90-down', 'text-indigo-600');
+            }
+        };
+
+        // Highlight text tìm kiếm
+        function highlightText(text, query) {
+            if (!query) return text;
+            // Escape các ký tự đặc biệt trong regex
+            query = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<span class="bg-yellow-300 text-slate-900 px-0.5 rounded shadow-sm font-semibold">$1</span>');
+        }
+
+        // Copy vào clipboard
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Hiệu ứng Toast nhỏ (Custom alert)
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm animate-bounce';
+                toast.innerText = 'Đã copy: ' + text.substring(0, 20) + (text.length>20 ? '...' : '');
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 1500);
+            });
+        };
+
+        // Escape HTML để hiển thị code trong thẻ pre
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Xử lý sự kiện tìm kiếm
+        function handleSearch() {
+            const query = searchInput.value.toLowerCase().trim();
+            
+            // Toggle nút Clear
+            if (query.length > 0) clearBtn.classList.remove('hidden');
+            else clearBtn.classList.add('hidden');
+
+            const filtered = dictionary.filter(item => {
+                return item.css.toLowerCase().includes(query) || 
+                       item.tailwind.toLowerCase().includes(query) || 
+                       item.desc.toLowerCase().includes(query) ||
+                       item.detail.toLowerCase().includes(query);
+            });
+
+            renderTable(filtered);
+        }
+
+        searchInput.addEventListener('input', handleSearch);
+        
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            handleSearch();
+            searchInput.focus();
+        });
+
+        // Init
+        renderTable(dictionary);
+
+    </script>
+</body>
+</html>
