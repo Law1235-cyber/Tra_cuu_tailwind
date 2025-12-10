@@ -1,0 +1,111 @@
+/* Using Inter font from Google Fonts */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9; /* slate-100 */
+}
+::-webkit-scrollbar-thumb {
+    background: #94a3b8; /* slate-400 */
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #64748b; /* slate-500 */
+}
+.dark ::-webkit-scrollbar-track {
+    background: #1e293b; /* slate-800 */
+}
+.dark ::-webkit-scrollbar-thumb {
+    background: #475569; /* slate-600 */
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #334155; /* slate-700 */
+}
+
+/* Result Item - These classes will be added via JS */
+.result-item {
+    background-color: white;
+    border: 1px solid #e2e8f0; /* slate-200 */
+    border-radius: 0.75rem; /* rounded-xl */
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0.5rem;
+    max-width: 1500px;
+}
+
+@media (min-width: 640px) { /* sm breakpoint */
+    .result-item {
+        grid-template-columns: 1.5fr 2fr 3fr;
+        align-items: center;
+        gap: 1rem;
+    }
+}
+
+.result-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    border-color: #3b82f6; /* blue-500 */
+}
+
+.dark .result-item {
+    background-color: #1e293b; /* slate-800 */
+    border-color: #334155; /* slate-700 */
+}
+
+.dark .result-item:hover {
+    border-color: #3b82f6; /* blue-500 */
+}
+
+.class-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    color: #4338ca; /* indigo-700 */
+    background-color: #e0e7ff; /* indigo-100 */
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem; /* rounded-md */
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dark .class-name {
+    color: #a5b4fc; /* indigo-300 */
+    background-color: #3730a3; /* indigo-800 */
+}
+
+.css-code {
+    font-family: 'JetBrains Mono', monospace;
+    color: #475569; /* slate-600 */
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dark .css-code {
+    color: #94a3b8; /* slate-400 */
+}
+
+.description-text {
+    font-size: 0.875rem; /* text-sm */
+    color: #64748b; /* slate-500 */
+}
+
+.dark .description-text {
+    color: #9ca3af; /* slate-400 */
+}
+
+/* Toast animation */
+#toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
