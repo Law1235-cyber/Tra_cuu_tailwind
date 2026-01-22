@@ -1031,32 +1031,49 @@ const render = (items) => {
   list.innerHTML = ""; // Xóa cũ
 
   if (items.length === 0) {
-    list.innerHTML = `<div class="text-center py-12 text-slate-500 dark:text-slate-400">
-            <p>😕 Không tìm thấy kết quả nào khớp với từ khóa của bạn.</p>
-        </div>`;
+    list.innerHTML = `
+      <tr class="border-b border-slate-200 dark:border-slate-700">
+        <td colspan="4" class="p-8 text-center text-slate-500 dark:text-slate-400 italic">
+          😕 Không tìm thấy kết quả nào khớp với từ khóa của bạn.
+        </td>
+      </tr>`;
     return;
   }
 
   items.forEach((item) => {
-    const resultDiv = document.createElement("div");
-    resultDiv.className = "result-item";
-    resultDiv.innerHTML = `
-            <div class="class-name-wrapper">
-                <span class="class-name">.${item.class}</span>
-            </div>
-            <div class="css-code-wrapper">
-                <span class="css-code">${item.css}</span>
-            </div>
-            <p class="description-text">${item.description}</p>
-        `;
+    const tr = document.createElement("tr");
+    tr.className = "hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition-colors duration-150 cursor-pointer group border-b border-slate-200 dark:border-slate-700 last:border-0";
 
-    // Click để copy
-    resultDiv.addEventListener("click", () => {
-      navigator.clipboard.writeText(item.class);
-      showToast(`Đã sao chép: ${item.class}`);
-    });
+    // Create cells
+    tr.innerHTML = `
+        <td class="p-4 align-top border-r border-slate-200 dark:border-slate-700 font-mono text-blue-600 dark:text-cyan-400 font-medium">
+            .${item.class}
+        </td>
+        <td class="p-4 align-top border-r border-slate-200 dark:border-slate-700 font-mono text-xs sm:text-sm text-slate-600 dark:text-slate-400 break-all">
+            ${item.css}
+        </td>
+        <td class="p-4 align-top border-r border-slate-200 dark:border-slate-700 text-sm text-slate-700 dark:text-slate-300">
+            ${item.description}
+        </td>
+        <td class="p-4 align-middle text-center w-[80px]">
+            <button class="copy-btn p-2 rounded-full hover:bg-cyan-100 dark:hover:bg-cyan-800 text-slate-400 dark:text-slate-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors" title="Sao chép">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H10.5a1.125 1.125 0 01-1.125 1.125v6.75c0 .621.504 1.125 1.125 1.125z" />
+                </svg>
+            </button>
+        </td>
+    `;
 
-    list.appendChild(resultDiv);
+    // Click row to copy
+    const handleCopy = (e) => {
+        // Prevent double copy if button is clicked directly (optional, but handling bubbling is good)
+        navigator.clipboard.writeText(item.class);
+        showToast(`Đã sao chép: ${item.class}`);
+    };
+
+    tr.addEventListener("click", handleCopy);
+
+    list.appendChild(tr);
   });
 };
 
