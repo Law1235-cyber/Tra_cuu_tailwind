@@ -8,132 +8,118 @@
 html, body {
     height: 100%;
     width: 100%;
-    color: black;
 }
 
 body {
     font-family: 'Inter', sans-serif;
     font-size: 16px;
-    line-height: 1.2;
+    line-height: 1.5;
 }
 
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
 }
 ::-webkit-scrollbar-track {
     background: #f1f5f9; /* slate-100 */
 }
 ::-webkit-scrollbar-thumb {
-    background: #94a3b8; /* slate-400 */
+    background: #cbd5e1; /* slate-300 */
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #64748b; /* slate-500 */
+    background: #94a3b8; /* slate-400 */
 }
 .dark ::-webkit-scrollbar-track {
-    background: #1e293b; /* slate-800 */
+    background: #0f172a; /* slate-900 */
 }
 .dark ::-webkit-scrollbar-thumb {
-    background: #475569; /* slate-600 */
-}
-.dark ::-webkit-scrollbar-thumb:hover {
     background: #334155; /* slate-700 */
 }
-
-/* Result Item - These classes will be added via JS */
-.result-item {
-    background-color: white;
-    border: 1px solid #e2e8f0; /* slate-200 */
-    border-radius: 0.75rem; /* rounded-xl */
-    padding: 1rem;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-    width: 100%;
-    min-height: 3.5rem;
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #475569; /* slate-600 */
 }
 
-@media (min-width: 640px) { /* sm breakpoint */
-    .result-item {
-        grid-template-columns: 180px 200px 1fr;
-        align-items: center;
-        gap: 1rem;
-        min-height: auto;
+/* Lightning/Neon Effect Styles */
+
+/* 1. Neon Text Effect */
+.neon-text {
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.5),
+                 0 0 20px rgba(56, 189, 248, 0.3);
+}
+
+/* 2. Lightning Border Effect Container */
+@property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.lightning-border-container {
+    position: relative;
+    /* We use ::before and ::after for the glow/border animation */
+}
+
+.lightning-border-container::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    z-index: -1;
+    background: linear-gradient(var(--angle),
+        #06b6d4, /* cyan-500 */
+        #3b82f6, /* blue-500 */
+        #06b6d4  /* cyan-500 */
+    );
+    border-radius: 0.8rem; /* Slightly larger than container */
+    animation: rotate 4s linear infinite;
+    opacity: 0.7;
+    filter: blur(8px);
+}
+
+@keyframes rotate {
+    0% {
+        --angle: 0deg;
+    }
+    100% {
+        --angle: 360deg;
     }
 }
 
-@media (min-width: 1024px) { /* lg breakpoint */
-    .result-item {
-        grid-template-columns: 200px 250px 1fr;
-        gap: 1.5rem;
-    }
+/* Fallback for browsers not supporting @property (optional simplified border) */
+@supports not (background: paint(something)) {
+    /* Most modern browsers support @property now or fallback gracefully */
 }
 
-.result-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    border-color: #3b82f6; /* blue-500 */
+
+/* 3. Background Flash/Lightning Animation */
+@keyframes lightning-flash-anim {
+    0%, 90% { opacity: 0; }
+    92% { opacity: 0.1; background-color: #fff; } /* Flash white */
+    93% { opacity: 0; }
+    94% { opacity: 0.05; background-color: #06b6d4; } /* Flash cyan */
+    96% { opacity: 0; }
+    100% { opacity: 0; }
 }
 
-.dark .result-item {
-    background-color: #1e293b; /* slate-800 */
-    border-color: #334155; /* slate-700 */
+.lightning-flash {
+    animation: lightning-flash-anim 10s infinite;
 }
 
-.dark .result-item:hover {
-    border-color: #3b82f6; /* blue-500 */
-}
-
-.class-name {
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 500;
-    color: #4338ca; /* indigo-700 */
-    background-color: #e0e7ff; /* indigo-100 */
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.375rem; /* rounded-md */
-    font-size: 0.875rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0;
-    display: inline-block;
-}
-
-.dark .class-name {
-    color: #a5b4fc; /* indigo-300 */
-    background-color: #3730a3; /* indigo-800 */
-}
-
-.css-code {
-    font-family: 'JetBrains Mono', monospace;
-    color: #475569; /* slate-600 */
-    font-size: 0.8125rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0;
-}
-
-.dark .css-code {
-    color: #94a3b8; /* slate-400 */
-}
-
-.description-text {
-    font-size: 0.875rem; /* text-sm */
-    color: #64748b; /* slate-500 */
-    line-height: 1.5;
-    word-break: break-word;
-}
-
-.dark .description-text {
-    color: #9ca3af; /* slate-400 */
-}
 
 /* Toast animation */
 #toast.show {
     opacity: 1;
     transform: translate(-50%, 0);
+}
+
+/* Table Specific Polishing */
+th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f8fafc; /* slate-50 */
+}
+.dark th {
+    background-color: #1e293b; /* slate-800 */
 }
